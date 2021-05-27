@@ -28,5 +28,11 @@ func main() {
 		log.Fatalf("unable to create the request: %s", err)
 	}
 
-	fmt.Printf("request: %+v\n", request)
+	client := http.Client{}
+	response, err := client.Do(request)
+	if err != nil {
+		log.Fatalf("unable to send the request: %s", err)
+	}
+
+	fmt.Printf("response: %+v\n", response)
 }
