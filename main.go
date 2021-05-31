@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -33,6 +34,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("unable to send the request: %s", err)
 	}
+	defer response.Body.Close()
 
-	fmt.Printf("response: %+v\n", response)
+	responseBytes, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Fatalf("unable to read the response: %s", err)
+	}
+
+	fmt.Printf("response: %s\n", responseBytes)
 }
