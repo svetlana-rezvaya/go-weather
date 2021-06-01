@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -8,6 +9,16 @@ import (
 	"net/http"
 	"os"
 )
+
+type weatherInfo struct {
+	Main mainInfo
+}
+
+type mainInfo struct {
+	Temperature float64 `json:"temp"`
+	Pressure    float64
+	Humidity    float64
+}
 
 func main() {
 	apiKey := os.Getenv("OPENWEATHER_API_KEY")
@@ -41,5 +52,11 @@ func main() {
 		log.Fatalf("unable to read the response: %s", err)
 	}
 
-	fmt.Printf("response: %s\n", responseBytes)
+	weatherData := weatherInfo{}
+	err = json.Unmarshal(responseBytes, &weatherData)
+	if err != nil {
+		log.Fatalf("unable to unmarshal the response: %s", err)
+	}
+
+	fmt.Printf("weather: %+v\n", weatherData)
 }
