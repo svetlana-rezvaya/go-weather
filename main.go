@@ -1,10 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -30,32 +28,14 @@ func main() {
 	city := flag.String("city", "New York", "city name")
 	flag.Parse()
 
+	weatherData := weatherInfo{}
 	url := fmt.Sprintf(
 		"http://api.openweathermap.org/data/2.5/weather?appid=%s&q=%s&units=metric",
 		apiKey,
 		*city,
 	)
-	request, err := http.NewRequest(http.MethodGet, url, nil)
-	if err != nil {
-		log.Fatalf("unable to create the request: %s", err)
-	}
-
-	client := http.Client{}
-	response, err := client.Do(request)
-	if err != nil {
-		log.Fatalf("unable to send the request: %s", err)
-	}
-	defer response.Body.Close()
-
-	responseBytes, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		log.Fatalf("unable to read the response: %s", err)
-	}
-
-	weatherData := weatherInfo{}
-	err = json.Unmarshal(responseBytes, &weatherData)
-	if err != nil {
-		log.Fatalf("unable to unmarshal the response: %s", err)
+	if err := loadJSONData(&http.Client{}, url, &weatherData); err != nil {
+		log.Fatalf("unable to load the weather data: %s", err)
 	}
 
 	fmt.Printf("weather: %+v\n", weatherData)
