@@ -8,16 +8,6 @@ import (
 	"os"
 )
 
-type weatherInfo struct {
-	Main mainInfo
-}
-
-type mainInfo struct {
-	Temperature float64 `json:"temp"`
-	Pressure    float64
-	Humidity    float64
-}
-
 func main() {
 	apiKey := os.Getenv("OPENWEATHER_API_KEY")
 	if apiKey == "" {
