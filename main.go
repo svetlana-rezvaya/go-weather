@@ -28,5 +28,5 @@ func main() {
 		log.Fatalf("unable to load the weather data: %s", err)
 	}
 
-	fmt.Printf("weather: %+v\n", weatherData)
+	displayAsPlainText(weatherData)
 }
