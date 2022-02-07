@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type systemInfo struct {
 	Country string
 }
@@ -35,4 +37,19 @@ type weatherInfo struct {
 	Visibility int
 	Rain       *precipitationInfo
 	Snow       *precipitationInfo
+}
+
+func (info weatherInfo) location() string {
+	return fmt.Sprintf("%s, %s", info.City, info.System.Country)
+}
+
+func (info weatherInfo) precipitationVolume() float32 {
+	volume := float32(0)
+	if info.Rain != nil {
+		volume = info.Rain.Volume
+	} else if info.Snow != nil {
+		volume = info.Snow.Volume
+	}
+
+	return volume
 }
