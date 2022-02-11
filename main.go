@@ -16,17 +16,22 @@ func main() {
 	}
 
 	city := flag.String("city", "New York", "city name")
+	asciiArt := flag.Bool("ascii-art", false, "display as ASCII art")
 	flag.Parse()
 
-	weatherData := weatherInfo{}
+	info := weatherInfo{}
 	url := fmt.Sprintf(
 		"http://api.openweathermap.org/data/2.5/weather?appid=%s&q=%s&units=metric",
 		apiKey,
 		*city,
 	)
-	if err := loadJSONData(&http.Client{}, url, &weatherData); err != nil {
+	if err := loadJSONData(&http.Client{}, url, &info); err != nil {
 		log.Fatalf("unable to load the weather data: %s", err)
 	}
 
-	displayAsPlainText(weatherData)
+	if *asciiArt {
+		displayAsASCIIArt(info)
+	} else {
+		displayAsPlainText(info)
+	}
 }
